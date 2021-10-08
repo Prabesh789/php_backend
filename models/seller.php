@@ -58,5 +58,6 @@ public function register_seller(){
     }
   }
 }
+/**seller object */
 
 $seller = new Seller();
