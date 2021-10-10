@@ -10,6 +10,7 @@ class Seller{
 
     public $id;
     public $name;
+    public $email;
     public $password;
     public $image;
     public $address;
@@ -37,13 +38,15 @@ public function register_seller(){
     global $database;
 
     $this-> name = trim(htmlspecialchars(strip_tags($this->name)));
+    $this-> email = trim(htmlspecialchars(strip_tags($this->email)));
     $this-> password = trim(htmlspecialchars(strip_tags($this->password)));
     $this-> image = trim(htmlspecialchars(strip_tags($this->image)));
     $this-> address = trim(htmlspecialchars(strip_tags($this->address)));
     $this-> description = trim(htmlspecialchars(strip_tags($this->description)));
 
-    $sql = "INSERT INTO $this -> table (name, password, image, address, description) VALUES(
+    $sql = "INSERT INTO $this -> table (name, email, password, image, address, description) VALUES(
         '" .$database-> escape_value($this->name). "',
+        '" .$database-> escape_value($this->email). "',
         '" .$database-> escape_value($this->password). "',
         '" .$database-> escape_value($this->image). "',
         '" .$database-> escape_value($this->address). "',
