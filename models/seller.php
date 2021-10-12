@@ -1,11 +1,14 @@
 <?php
 
 $ds = DIRECTORY_SEPARATOR;
-$base_dir = realpath(dirname(__FILE__). $ds . '..').$ds;
+$base_dir = realpath(dirname(__FILE__) . $ds . '..') . $ds;
 
-require_once("{$base_dir}includes{$ds}Database.php"); /**Including database */
+require_once("{$base_dir}includes{$ds}database.php"); // Including database
+require_once("{$base_dir}includes{$ds}bcrypt.php"); // Including Bcrypt
+/**Including database */
 
-class Seller{
+class Seller
+{
     private $table = 'sellers';
 
     public $id;
@@ -16,50 +19,60 @@ class Seller{
     public $address;
     public $description;
 
-/**constructure */
+    /**constructure */
 
-public function __constructure(){}
-
-
-/**Validations a params existing or not */
-public function validate_params($value){
-    // if(!empty($value)){
-    //     return true;
-    // }else{
-    //     return false;
-    // }
-
-    return (!empty($value));
-}
-
-/**saving a data into database */
-
-public function register_seller(){
-    global $database;
-
-    $this-> name = trim(htmlspecialchars(strip_tags($this->name)));
-    $this-> email = trim(htmlspecialchars(strip_tags($this->email)));
-    $this-> password = trim(htmlspecialchars(strip_tags($this->password)));
-    $this-> image = trim(htmlspecialchars(strip_tags($this->image)));
-    $this-> address = trim(htmlspecialchars(strip_tags($this->address)));
-    $this-> description = trim(htmlspecialchars(strip_tags($this->description)));
-
-    $sql = "INSERT INTO $this -> table (name, email, password, image, address, description) VALUES(
-        '" .$database-> escape_value($this->name). "',
-        '" .$database-> escape_value($this->email). "',
-        '" .$database-> escape_value($this->password). "',
-        '" .$database-> escape_value($this->image). "',
-        '" .$database-> escape_value($this->address). "',
-        '" .$database-> escape_value($this->description). "'
-    )";
-    $seller_saved = $database->query($sql);
-
-    if($seller_saved) {
-        return $database -> last_insert_id();
-    } else{
-       false;
+    public function __construct()
+    {
     }
-  }
+
+    function __toString()
+    {
+        return json_encode((array)$this);
+    }
+
+    /**Validations a params existing or not */
+    public function validate_params($value)
+
+    {
+        // if(!empty($value)){
+        //     return true;
+        // }else{
+        //     return false;
+        // }
+        return (!empty($value));
+    }
+
+
+    /**saving a data into database */
+
+    public function register_seller()
+    {
+        global $database;
+
+        $this->name = trim(htmlspecialchars(strip_tags($this->name)));
+        $this->email = trim(htmlspecialchars(strip_tags($this->email)));
+        $this->password = trim(htmlspecialchars(strip_tags($this->password)));
+        $this->image = trim(htmlspecialchars(strip_tags($this->image)));
+        $this->address = trim(htmlspecialchars(strip_tags($this->address)));
+        $this->description = trim(htmlspecialchars(strip_tags($this->description)));
+
+        $sql = "INSERT INTO $this->table (name, email, password, image, address, description) VALUES (
+            '" . $database->escape_value($this->name) . "',
+            '" . $database->escape_value($this->email) . "',
+            '" . $database->escape_value(Bcrypt::hashPassword($this->password)) . "',
+            '" . $database->escape_value($this->image) . "',
+            '" . $database->escape_value($this->address) . "',
+            '" . $database->escape_value($this->description) . "'
+        )";
+
+        $seller_saved = $database->query($sql);
+
+        if ($seller_saved) {
+            return  true;
+        } else {
+            false;
+        }
+    }
 }
 /**seller object */
 
