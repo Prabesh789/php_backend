@@ -42,6 +42,21 @@ class Seller
         return (!empty($value));
     }
 
+    // to check if email is unique or not
+    public function check_unique_email()
+    {
+        global $database;
+
+        $this->email = trim(htmlspecialchars(strip_tags($this->email)));
+
+        $sql = "SELECT id FROM $this->table WHERE email = '" . $database->escape_value($this->email) . "'";
+
+        $result = $database->query($sql);
+        $user_id = $database->fetch_row($result);
+
+        return empty($user_id);
+    }
+
 
     /**saving a data into database */
 
@@ -71,6 +86,31 @@ class Seller
             return  true;
         } else {
             false;
+        }
+    }
+
+    // login function
+    public function login()
+    {
+        global $database;
+
+        $this->email = trim(htmlspecialchars(strip_tags($this->email)));
+        $this->password = trim(htmlspecialchars(strip_tags($this->password)));
+
+        $sql = "SELECT * FROM $this->table WHERE email = '" . $database->escape_value($this->email) . "'";
+
+        $result = $database->query($sql);
+        $seller = $database->fetch_row($result);
+
+        if (empty($seller)) {
+            return "Seller with this email doesn't exist.";
+        } else {
+            if (Bcrypt::checkPassword($this->password, $seller['password'])) {
+                unset($seller['password']);
+                return $seller;
+            } else {
+                return "Password doesn't match.";
+            }
         }
     }
 }
