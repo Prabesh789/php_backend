@@ -35,6 +35,7 @@ class Product
         global $database;
 
         $this->seller_id = trim(htmlspecialchars(strip_tags($this->seller_id)));
+        $this->seller_id = trim(htmlspecialchars(strip_tags($this->seller_id)));
         $this->name = trim(htmlspecialchars(strip_tags($this->name)));
         $this->image = trim(htmlspecialchars(strip_tags($this->image)));
         $this->price_per_kg = trim(htmlspecialchars(strip_tags($this->price_per_kg)));
